@@ -8,8 +8,11 @@ public class ColController : MonoBehaviour
 {
     public PlayerController playerController;
 
+    public bool canMove;
     public bool playerMove;
     public bool blockMove;
+
+    public bool obstacleDetected;
 
     [Header("Block Info")]
     public GameObject block;
@@ -24,15 +27,26 @@ public class ColController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (canMove)
+        {
+            if (blockDetected || obstacleDetected)
+            {
+                playerMove = false;
+                blockMove = false;
+            }
+            else
+            {
+                playerMove = true;
+                blockMove = true;
+            }
+        }
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("CanPass"))
         {
-            playerMove = true;
-            blockMove = true;
+            canMove = true;
         }
 
         if (other.gameObject.layer == LayerMask.NameToLayer("Stairs"))
@@ -40,12 +54,14 @@ public class ColController : MonoBehaviour
             blockMove = false;
         }
 
+        if (other.gameObject.layer == LayerMask.NameToLayer("Obstacles"))
+        {
+            obstacleDetected = true;
+        }
+
         if (other.gameObject.layer == LayerMask.NameToLayer("Pushables"))
         {
             blockDetected = true;
-            playerMove = false;
-            blockMove = false;
-
             block = other.gameObject;
         }
     }
@@ -62,12 +78,14 @@ public class ColController : MonoBehaviour
             blockMove = true;
         }
 
+        if (other.gameObject.layer == LayerMask.NameToLayer("Obstacles"))
+        {
+            obstacleDetected = false;
+        }
+
         if (other.gameObject.layer == LayerMask.NameToLayer("Pushables"))
         {
             blockDetected = false;
-            playerMove = true;
-            blockMove = true;
-
             block = null;
         }
     }

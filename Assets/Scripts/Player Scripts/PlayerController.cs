@@ -355,21 +355,7 @@ public class PlayerController : MonoBehaviour
 
         if (readyShift)
         {
-            saveNextTile = nextTile;
-            saveLastTile = lastTile;
-
-            transform.position = nextTile;
-            
-            bodyPos = nextTile;
-
-            bodyFloor = playerCol.floorNumber;
-            coatSleep.SetActive(true);
-            coatSleep.transform.parent = null;
-
-            playerSprite.sprite = greenFront;
-
-            isShifted = true;
-            readyShift = false;
+            StartCoroutine(Shift());
         }
     }
 
@@ -418,6 +404,29 @@ public class PlayerController : MonoBehaviour
         block.transform.position = targetBlockPos;
 
         canMove = true;
+    }
+
+    IEnumerator Shift()
+    {
+        saveNextTile = nextTile;
+        saveLastTile = lastTile;
+
+        transform.position = nextTile;
+
+        bodyPos = nextTile;
+
+        bodyFloor = playerCol.floorNumber;
+        coatSleep.SetActive(true);
+        coatSleep.transform.parent = null;
+
+        playerSprite.sprite = greenFront;
+
+        isShifted = true;
+        readyShift = false;
+
+        moveColliders.SetActive(false);
+        yield return new WaitForSeconds(0.025f);
+        moveColliders.SetActive(true);
     }
 
     private IEnumerator RecallSoul()

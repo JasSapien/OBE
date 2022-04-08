@@ -95,6 +95,11 @@ public class PlayerCollider : MonoBehaviour
         {
             onStairs = true;
         }
+
+        if ((!playerController.isShifted || playerController.controlBlock) && other.gameObject.layer == LayerMask.NameToLayer("Switch"))
+        {
+            other.GetComponent<SwitchController>().switchActive = true;
+        }
     }
 
     public void OnTriggerExit2D(Collider2D other)
@@ -102,6 +107,11 @@ public class PlayerCollider : MonoBehaviour
         if (other.gameObject.name == ("Stairs"))
         {
             onStairs = false;
+        }
+
+        if ((!playerController.isShifted || playerController.controlBlock) && other.gameObject.layer == LayerMask.NameToLayer("Switch"))
+        {
+            other.GetComponent<SwitchController>().switchActive = false;
         }
 
         if (playerController.isShifted)
